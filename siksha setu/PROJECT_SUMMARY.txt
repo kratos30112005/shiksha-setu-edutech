@@ -1,0 +1,263 @@
+================================================================
+  SHIKSHASETU — PROJECT SUMMARY (as of March 15, 2026)
+  AI-Powered Learning Platform
+================================================================
+
+HOW TO RUN
+----------
+1. Open terminal in: siksha setu/backend/
+2. Run: python app.py
+3. Open browser at: http://127.0.0.1:5000
+
+
+================================================================
+PROJECT STRUCTURE
+================================================================
+
+siksha setu/
+├── backend/
+│   ├── app.py              ← Flask server (main backend)
+│   ├── logic.py            ← AI logic, PDF parsing, quiz/plan generators
+│   ├── requirements.txt    ← Flask, flask-cors, PyPDF2
+│   ├── uploads/            ← Uploaded PDFs stored here
+│   └── ml/
+│       └── profile_engine.py  ← Student cognitive profile engine
+│
+└── frontend/
+    ├── css/
+    │   └── style.css       ← Global dark design system
+    ├── js/
+    │   └── script.js       ← Shared JS: chat, toast, upload, markdown
+    └── html/
+        ├── index.html          ← Landing page
+        ├── dashboard.html      ← Main dashboard
+        ├── ai-tutor.html       ← Saarthi AI chat interface
+        ├── mocktest.html       ← Adaptive mock exam
+        ├── funquiz.html        ← Quick 5-question quiz
+        ├── exam-preparation.html  ← Exam prep hub
+        ├── smart-revision.html ← AI revision prioritizer
+        ├── study-planner.html  ← 7-day AI study plan
+        └── leaderboard.html    ← Global rankings
+
+
+================================================================
+BACKEND — API ENDPOINTS
+================================================================
+
+GET  /                         → Serves index.html (landing page)
+GET  /html/<page>              → Serves any frontend HTML page
+GET  /js/<file>                → Serves JS files
+GET  /css/<file>               → Serves CSS files
+
+POST /api/login                → Start session with student name
+POST /api/logout               → Clear session
+GET  /api/user                 → Get user info + cognitive profile
+
+POST /api/upload               → Upload PDF syllabus (extracts text)
+POST /api/chat                 → AI Tutor chat (cognitive-aware reply)
+
+GET  /api/solo-mock            → Generate 10 MCQs from uploaded PDF
+GET  /api/fun-quiz             → Get 1 random quiz question
+POST /api/analyze-performance  → Update cognitive profile after test
+
+GET  /api/study-plan           → 7-day AI study plan from syllabus
+GET  /api/smart-revision       → AI revision priority list
+GET  /api/leaderboard?mode=individual|group  → Leaderboard data
+
+
+================================================================
+BACKEND — KEY FILES
+================================================================
+
+--- app.py ---
+- Flask server with CORS enabled
+- Serves both frontend files and API routes
+- Session-based user management (no database needed)
+- In-memory PDF storage per user session
+
+--- logic.py ---
+Functions:
+  load_pdf(path)               → Extracts text from PDF
+  clean_words(text)            → Removes stopwords, returns key terms
+  handle_message(msg, notes, profile) → Cognitive AI reply (3 levels)
+  find_relevant_paragraph()    → Finds best-matching paragraph
+  generate_mcq(notes)          → Creates MCQ from PDF keywords
+  generate_mock_questions()    → Generates 10 MCQ objects for mock test
+  generate_fun_quiz_question() → Returns 1 quiz question (static bank or from PDF)
+  generate_study_plan()        → 7-day plan + predicted score + mode
+  generate_revision_plan()     → Priority topics + revision frequency
+  get_leaderboard_data(mode)   → Returns solo or group leaderboard
+
+--- ml/profile_engine.py ---
+  create_student_profile()     → Initial profile (cognitive_score=50)
+  update_profile(profile, data)→ Updates score/accuracy after each test
+
+Cognitive Score System:
+  - Starts at 50
+  - Goes up when accuracy > 70%, goes down when < 50%
+  - Determines AI explanation level (simple / balanced / advanced)
+  - Sets difficulty: easy (<40), medium (40-70), hard (70+)
+
+
+================================================================
+FRONTEND — DESIGN SYSTEM (css/style.css)
+================================================================
+
+Theme: Dark premium with glassmorphism
+Font: Plus Jakarta Sans (Google Fonts)
+
+CSS Variables:
+  --brand-primary: #7C3AED (purple)
+  --brand-secondary: #EC4899 (pink)
+  --brand-accent: #F59E0B (amber)
+  --brand-success: #10B981 (green)
+  --bg-deep: #0A0A0F (near black)
+  --gradient-brand: purple → pink
+
+Components defined in style.css:
+  .glass-card        → Frosted dark card with border
+  .btn, .btn-primary → Gradient buttons with hover lift
+  .navbar            → Sticky glassmorphic top nav
+  .sidebar           → Left nav (260px fixed)
+  .badge             → Colored small status pills
+  .progress-track    → Animated progress bar
+  .toast-container   → Bottom-right notification system
+  .spinner           → CSS loading animation
+  .anim-fade-up-*    → Staggered enter animations
+
+
+================================================================
+FRONTEND — PAGES
+================================================================
+
+index.html (Landing Page)
+  - Animated gradient orbs in background
+  - Hero: "Study Smarter, Not Harder"
+  - Glass login card — enter name → session starts
+  - 6 animated feature cards
+  - Quote section
+
+dashboard.html
+  - Sidebar navigation (8 items + logout)
+  - Welcome banner with personalized greeting + level badge
+  - 4 live stat chips from /api/user:
+      Cognitive Score, Avg Accuracy, Tests Taken, Difficulty Level
+  - 6 module cards linking to all features
+
+ai-tutor.html (Saarthi AI)
+  - Chat layout, full-screen
+  - PDF upload in top bar with status display
+  - Typing indicator bubble while AI thinks
+  - 6 quick-ask chips (Summarize, Key Topics, Quiz, Simplify, etc.)
+  - Voice input button (Web Speech API)
+
+mocktest.html (Assessment Arena)
+  - Step 1: PDF Upload (drag zone)
+  - Step 2: Choose Solo or Group mode
+  - Step 3: 10-question MCQ test with progress bar + labels
+  - Instant correct/wrong animation on answer
+  - Result screen with cognitive score update from API
+
+funquiz.html
+  - 5-question rapid quiz
+  - Questions from /api/fun-quiz (PDF or static bank)
+  - Gradient progress bar, emoji per question
+  - Score screen with star feedback
+
+exam-preparation.html
+  - Upload zone for syllabus PDF
+  - AI loading spinner during upload
+  - Reveals 3 cards after upload: Planner, Revision, Mock Test
+
+smart-revision.html
+  - Data from /api/smart-revision
+  - AI Mentor card with personalized summary
+  - Revision frequency + cognitive tip
+  - Focus steps with High/Medium priority badges
+  - Animated weightage bars per topic
+
+study-planner.html
+  - Data from /api/study-plan
+  - SVG circular progress ring (updates as tasks complete)
+  - 3 mode chips: Study Mode, Mock Strategy, Predicted Score
+  - 7-day plan with checkable topic items
+
+leaderboard.html
+  - Data from /api/leaderboard?mode=
+  - Tab switch: Solo Learners / Study Squads
+  - Animated podium (1st, 2nd, 3rd)
+  - Full table: rank medals, avatar, score, AI focus area, streak
+
+
+================================================================
+FRONTEND — SHARED JS (js/script.js)
+================================================================
+
+showToast(msg, type, duration)   → Success/error/info notification
+uploadPDF(file, onProgress)      → Calls /api/upload, shows toast
+sendMessage()                    → Sends chat to /api/chat
+appendMessage(box, text, sender) → Adds bubble to chat
+appendThinking(box, id)          → Typing indicator bubble
+quickAsk(text)                   → Prefill and send AI Tutor message
+formatMarkdown(text)             → Basic **bold**, *italic*, `code`
+startVoice()                     → Web Speech API voice input
+loadUserInfo()                   → Fetches /api/user and populates UI
+
+
+================================================================
+WHAT WAS ADDED/FIXED IN THIS SESSION
+================================================================
+
+ADDED:
+  ✓ /api/fun-quiz endpoint (was missing, quiz page was broken)
+  ✓ /api/leaderboard endpoint (was hardcoded in old HTML)
+  ✓ /api/logout endpoint
+  ✓ 7-day day-based structure in /api/study-plan response
+  ✓ Static quiz question bank (10 general knowledge questions)
+  ✓ generate_fun_quiz_question() function in logic.py
+  ✓ get_leaderboard_data() function in logic.py
+  ✓ Global CSS design system (style.css — completely new)
+  ✓ Global JS utilities (script.js — completely rewritten)
+
+FIXED:
+  ✓ Study plan returned wrong format (no 'plan' key with day objects)
+  ✓ Smart revision returned 'priority_topics' but frontend used wrong key
+  ✓ AI responses now include markdown formatting
+  ✓ PDF upload now returns word_count in response
+  ✓ Session handling improved (fallback to localStorage for login)
+
+REDESIGNED (all HTML pages):
+  ✓ index.html
+  ✓ dashboard.html
+  ✓ ai-tutor.html
+  ✓ mocktest.html
+  ✓ funquiz.html
+  ✓ exam-preparation.html
+  ✓ smart-revision.html
+  ✓ study-planner.html
+  ✓ leaderboard.html
+
+
+================================================================
+DEPENDENCIES (requirements.txt)
+================================================================
+
+flask
+flask-cors
+PyPDF2
+
+
+================================================================
+NOTES
+================================================================
+
+- No database is used. All data is session-based (in-memory).
+- Uploaded PDFs are stored in backend/uploads/ folder.
+- Each student's notes are stored by username in memory.
+  Restarting the server clears all uploaded notes.
+- The cognitive score resets each session (no persistence yet).
+- To add persistence, connect a database (SQLite/Firebase) later.
+
+================================================================
+  End of Project Summary
+================================================================

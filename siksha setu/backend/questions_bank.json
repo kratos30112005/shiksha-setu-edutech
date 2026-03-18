@@ -1,0 +1,54 @@
+{
+  "Mathematics": {
+    "Algebra": [
+      {
+        "id": "q1",
+        "question": "What is the value of x if 2x + 5 = 15?",
+        "options": ["5", "10", "4", "6"],
+        "answer": "5"
+      },
+      {
+        "id": "q2",
+        "question": "Which of the following is equivalent to x^2 - 9?",
+        "options": ["(x-3)(x+3)", "(x-9)^2", "(x-3)^2", "x(x-9)"],
+        "answer": "(x-3)(x+3)"
+      },
+      {
+        "id": "q3",
+        "question": "Solve for y: 3y - 2 = 7",
+        "options": ["2", "3", "4", "5"],
+        "answer": "3"
+      }
+    ],
+    "Geometry": [
+      {
+        "id": "q4",
+        "question": "What is the sum of angles in a triangle?",
+        "options": ["90", "180", "360", "270"],
+        "answer": "180"
+      },
+      {
+        "id": "q5",
+        "question": "What is the area of a circle with radius r?",
+        "options": ["pi*r", "2*pi*r", "pi*r^2", "pi^2*r"],
+        "answer": "pi*r^2"
+      }
+    ]
+  },
+  "Science": {
+    "Physics": [
+      {
+        "id": "q6",
+        "question": "What is the speed of light in vacuum?",
+        "options": ["3 x 10^8 m/s", "3 x 10^5 m/s", "3 x 10^10 m/s", "300 m/s"],
+        "answer": "3 x 10^8 m/s"
+      },
+      {
+        "id": "q7",
+        "question": "What is the unit of force?",
+        "options": ["Joule", "Newton", "Pascal", "Watt"],
+        "answer": "Newton"
+      }
+    ]
+  }
+}

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solo Mastery | ShikshaSetu</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--primary:#6366F1;
+--success:#10B981;
+--danger:#EF4444;
+--bg:#F8FAFC;
+--card:#ffffff;
+--text:#1E293B;
+}
+
+body{
+font-family:'Plus Jakarta Sans',sans-serif;
+background:var(--bg);
+margin:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+}
+
+header{
+margin-top:50px;
+text-align:center;
+}
+
+header h1{
+font-size:38px;
+font-weight:800;
+background:linear-gradient(135deg,#4F46E5,#EC4899);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+.upload-card{
+background:var(--card);
+padding:40px;
+border-radius:24px;
+width:90%;
+max-width:600px;
+margin-top:40px;
+text-align:center;
+box-shadow:0 20px 40px rgba(0,0,0,0.06);
+}
+
+button{
+padding:14px 28px;
+border:none;
+border-radius:12px;
+font-weight:700;
+cursor:pointer;
+}
+
+.btn-primary{
+background:var(--primary);
+color:white;
+}
+
+.btn-success{
+background:var(--success);
+color:white;
+margin-top:20px;
+}
+
+.question-box{
+margin-top:30px;
+text-align:left;
+}
+
+.option{
+display:block;
+margin:10px 0;
+padding:12px;
+border:1px solid #E2E8F0;
+border-radius:12px;
+cursor:pointer;
+}
+
+.option:hover{
+background:#EEF2FF;
+}
+
+.correct{
+background:#D1FAE5;
+border-color:var(--success);
+}
+
+.wrong{
+background:#FEE2E2;
+border-color:var(--danger);
+}
+
+.hidden{
+display:none;
+}
+
+.score-box{
+text-align:center;
+margin-top:30px;
+font-size:22px;
+font-weight:800;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Solo Mastery</h1>
+<p>Upload your syllabus and attempt AI-generated mock test.</p>
+</header>
+
+<div class="upload-card" id="uploadSection">
+<input type="file" id="pdfInput" accept=".pdf">
+<br><br>
+<button class="btn-primary" onclick="uploadPDF()">Start Test</button>
+</div>
+
+<div class="upload-card hidden" id="testSection">
+<div id="questionArea"></div>
+<button class="btn-success hidden" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+<div class="score-box hidden" id="scoreBox"></div>
+</div>
+
+<script>
+
+let questions = [];
+let current = 0;
+let score = 0;
+
+async function uploadPDF(){
+
+const file = document.getElementById("pdfInput").files[0];
+if(!file){
+alert("Please upload PDF first");
+return;
+}
+
+const formData = new FormData();
+formData.append("file",file);
+
+await fetch("/api/upload",{
+method:"POST",
+body:formData
+});
+
+const res = await fetch("/api/generate-mock",{
+method:"POST"
+});
+
+questions = await res.json();
+
+document.getElementById("uploadSection").classList.add("hidden");
+document.getElementById("testSection").classList.remove("hidden");
+
+loadQuestion();
+}
+
+function loadQuestion(){
+
+if(current >= questions.length){
+showResult();
+return;
+}
+
+const q = questions[current];
+
+let html = `<div class="question-box">
+<h3>Q${current+1}. ${q.question}</h3>`;
+
+q.options.forEach(opt=>{
+html += `<div class="option" onclick="checkAnswer(this,'${opt}','${q.answer}')">${opt}</div>`;
+});
+
+html += "</div>";
+
+document.getElementById("questionArea").innerHTML = html;
+}
+
+function checkAnswer(el,selected,correct){
+
+document.querySelectorAll(".option").forEach(o=>o.onclick=null);
+
+if(selected===correct){
+el.classList.add("correct");
+score++;
+}else{
+el.classList.add("wrong");
+document.querySelectorAll(".option").forEach(o=>{
+if(o.innerText===correct){
+o.classList.add("correct");
+}
+});
+}
+
+document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function nextQuestion(){
+current++;
+document.getElementById("nextBtn").classList.add("hidden");
+loadQuestion();
+}
+
+function showResult(){
+document.getElementById("questionArea").innerHTML="";
+document.getElementById("nextBtn").classList.add("hidden");
+
+const box = document.getElementById("scoreBox");
+box.classList.remove("hidden");
+box.innerHTML = `🏆 Your Score: ${score}/${questions.length}`;
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShikshaSetu | AI-Powered Learning Platform</title>
+  <meta name="description" content="ShikshaSetu — Master your syllabus with Saarthi, your personal AI mentor. Smart revision, mock tests, and adaptive learning.">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; background: var(--bg-deep); }
+
+    /* Hero */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px 80px;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124,58,237,0.12);
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: var(--radius-full);
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #A78BFA;
+      margin-bottom: 32px;
+      animation: fadeInUp 0.6s var(--ease-smooth);
+    }
+
+    .hero-title {
+      font-size: clamp(52px, 9vw, 90px);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      animation: fadeInUp 0.6s var(--ease-smooth) 0.1s both;
+    }
+
+    .hero-title .highlight {
+      color: var(--brand-primary);
+    }
+
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 550px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+      animation: fadeInUp 0.6s var(--ease-smooth) 0.2s both;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      width: 100%;
+      max-width: 460px;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-brand);
+      animation: scaleIn 0.6s var(--ease-smooth) 0.3s both;
+    }
+
+    .login-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .login-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .name-input {
+      width: 100%;
+      padding: 16px 24px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-full);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 16px;
+      transition: var(--transition);
+    }
+
+    .name-input::placeholder { color: var(--text-muted); }
+
+    .name-input:focus {
+      border-color: var(--brand-primary);
+      background: rgba(124,58,237,0.08);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-start {
+      flex: 2;
+      padding: 16px 24px;
+      background: var(--gradient-brand);
+      color: white;
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-sans);
+    }
+
+    .btn-start:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-brand);
+    }
+
+    .btn-explore {
+      flex: 1;
+      padding: 16px;
+      background: transparent;
+      border: 1px solid var(--border-medium);
+      color: var(--text-secondary);
+      border-radius: var(--radius-full);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      font-family: var(--font-sans);
+    }
+
+    .btn-explore:hover {
+      color: var(--text-primary);
+      border-color: var(--border-active);
+    }
+
+    /* Auth Form Styles */
+    .form-group { text-align: left; margin-bottom: 16px; }
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .auth-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-medium);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .auth-input:focus {
+      border-color: var(--brand-primary);
+      background: rgba(124,58,237,0.05);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+    .auth-input::placeholder { color: var(--text-muted); }
+    
+    .btn-auth {
+      width: 100%;
+      padding: 14px;
+      background: var(--gradient-brand);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 8px;
+    }
+    .btn-auth:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-brand);
+    }
+    
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+      color: var(--text-muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-medium);
+    }
+    .auth-divider::before { margin-right: 12px; }
+    .auth-divider::after { margin-left: 12px; }
+    
+    .oauth-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--border-medium);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition);
+      margin-bottom: 12px;
+    }
+    .oauth-btn:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--border-active);
+    }
+    
+    .auth-footer {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .auth-footer a {
+      color: var(--brand-primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .auth-footer a:hover { text-decoration: underline; }
+    
+    #signup-form { display: none; }
+
+    /* Features Section */
+    #features {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 32px;
+    }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .features-header h2 {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      margin-bottom: 12px;
+    }
+
+    .features-header p {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gradient-brand);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .feature-item:hover {
+      transform: translateY(-8px);
+      border-color: rgba(124,58,237,0.4);
+      box-shadow: var(--shadow-brand);
+    }
+
+    .feature-item:hover::before { opacity: 0.04; }
+
+    .feature-icon {
+      font-size: 40px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .feature-item h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .feature-item p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      max-width: 900px;
+      margin: 0 auto 80px;
+      padding: 60px 40px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote-section::before {
+      content: '"';
+      position: absolute;
+      top: 20px;
+      left: 40px;
+      font-size: 120px;
+      line-height: 1;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.3;
+      font-family: Georgia, serif;
+    }
+
+    .quote-section blockquote {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      position: relative;
+    }
+
+    .quote-section cite {
+      display: block;
+      margin-top: 20px;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="navbar-brand">ShikshaSetu</a>
+  <div class="navbar-actions">
+    <a href="/html/dashboard.html" class="btn btn-ghost btn-sm">Sign In</a>
+    <button class="btn btn-primary btn-sm" onclick="focusLogin()">Get Started</button>
+  </div>
+</nav>
+
+<main class="hero" id="home">
+  <div class="hero-badge">
+    <span>🤖</span> Powered by Saarthi AI
+  </div>
+
+  <h1 class="hero-title">
+    Study <span class="highlight">Smarter</span>,<br>Not Harder
+  </h1>
+
+  <p class="hero-sub">
+    ShikshaSetu bridges your dreams and reality. Upload your syllabus and let Saarthi AI create your personalized learning journey.
+  </p>
+
+  <div class="login-card" id="login-card">
+    
+    <!-- Login Form -->
+    <div id="login-form">
+      <h2>Welcome back</h2>
+      <p style="margin-bottom: 24px;">Enter your details to sign in to your account.</p>
+      
+      <div class="form-group">
+        <label class="input-label">Email</label>
+        <input type="email" id="login-email" class="auth-input" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="input-label" style="display: flex; justify-content: space-between;">
+          Password
+          <a href="#" style="color: var(--brand-primary); text-decoration: none; font-weight: normal;">Forgot?</a>
+        </label>
+        <input type="password" id="login-password" class="auth-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') login()" autocomplete="current-password">
+      </div>
+      
+      <button class="btn-auth" onclick="login()">Sign In</button>
+      
+      <div class="auth-divider">or continue with</div>
+      
+      <button class="oauth-btn" onclick="alert('Google OAuth not configured yet.')">
+        <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Google
+      </button>
+      
+      <div class="auth-footer">
+        Don't have an account? <a onclick="toggleForm('signup')">Sign up</a>
+      </div>
+    </div>
+
+    <!-- Sign up Form -->
+    <div id="signup-form">
+      <h2>Create an account</h2>
+      <p style="margin-bottom: 24px;">Start your personalized learning journey.</p>
+      
+      <div class="form-group">
+        <label class="input-label">Full Name</label>
+        <input type="text" id="signup-name" class="auth-input" placeholder="e.g. Rahul Sharma" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label class="input-label">Email</label>
+        <input type="email" id="signup-email" class="auth-input" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="input-label">Password</label>
+        <input type="password" id="signup-password" class="auth-input" placeholder="Create a strong password" onkeydown="if(event.key==='Enter') signup()" autocomplete="new-password">
+      </div>
+      
+      <button class="btn-auth" onclick="signup()">Create Account</button>
+      
+      <div class="auth-footer">
+        Already have an account? <a onclick="toggleForm('login')">Sign in</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<section id="features">
+  <div class="features-header">
+    <h2 style="color: var(--text-dark);">Everything you need to excel</h2>
+    <p>ShikshaSetu brings together AI-powered tools for every stage of your preparation</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-item anim-fade-up-1">
+      <span class="feature-icon">🤖</span>
+      <h3>Saarthi AI Tutor</h3>
+      <p>Upload your PDF notes and ask Saarthi anything. Get cognitively-tailored explanations based on your learning level.</p>
+    </div>
+    <div class="feature-item anim-fade-up-2">
+      <span class="feature-icon">📅</span>
+      <h3>Smart Study Planner</h3>
+      <p>AI analyzes your syllabus and builds a personalized 7-day roadmap focused on your weak topics.</p>
+    </div>
+    <div class="feature-item anim-fade-up-3">
+      <span class="feature-icon">⚔️</span>
+      <h3>Group Battle Mode</h3>
+      <p>Compete with friends in live mock tests. Share a room code and start a multiplayer exam instantly.</p>
+    </div>
+    <div class="feature-item anim-fade-up-1">
+      <span class="feature-icon">🧠</span>
+      <h3>Adaptive Mock Tests</h3>
+      <p>Questions adapt to your cognitive score. The harder you perform, the tougher it gets — keeps you sharp!</p>
+    </div>
+    <div class="feature-item anim-fade-up-2">
+      <span class="feature-icon">⚡</span>
+      <h3>Smart Revision</h3>
+      <p>AI identifies your weak topics from your exam history and prioritizes them in your revision schedule.</p>
+    </div>
+    <div class="feature-item anim-fade-up-3">
+      <span class="feature-icon">🏆</span>
+      <h3>Global Leaderboard</h3>
+      <p>See how you rank among all learners. Compete, improve, and climb your way to the top.</p>
+    </div>
+  </div>
+</section>
+
+<div style="padding: 0 32px; max-width: 1100px; margin: 0 auto 40px; width: 100%;">
+  <div class="quote-section anim-fade-up">
+    <blockquote>
+      "Bridging dreams and reality — one concept at a time, with the power of AI."
+    </blockquote>
+    <cite>— ShikshaSetu Vision, 2026</cite>
+  </div>
+</div>
+
+<footer class="page-footer">© 2026 ShikshaSetu — Built with ❤️ for Indian Students</footer>
+
+<script>
+function toggleForm(type) {
+  if (type === 'signup') {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('signup-form').style.display = 'block';
+  } else {
+    document.getElementById('signup-form').style.display = 'none';
+    document.getElementById('login-form').style.display = 'block';
+  }
+}
+
+function login() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  if (!email || !password) {
+    alert('Please enter both email and password');
+    return;
+  }
+
+  fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+  }).then(async res => {
+    const data = await res.json();
+    if (res.ok) {
+      window.location.href = '/html/dashboard.html';
+    } else {
+      alert(data.error || 'Login failed');
+    }
+  }).catch(() => {
+    alert('Network error. Please make sure the backend server is running.');
+  });
+}
+
+function signup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+
+  if (!name || !email || !password) {
+    alert('Please fill all fields');
+    return;
+  }
+
+  fetch('/api/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password })
+  }).then(async res => {
+    const data = await res.json();
+    if (res.ok) {
+      window.location.href = '/html/dashboard.html';
+    } else {
+      alert(data.error || 'Signup failed');
+    }
+  }).catch(() => {
+    alert('Network error. Please make sure the backend server is running.');
+  });
+}
+
+function focusLogin() {
+  const input = document.getElementById('login-email');
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => input.focus(), 400);
+}
+</script>
+</body>
+</html>

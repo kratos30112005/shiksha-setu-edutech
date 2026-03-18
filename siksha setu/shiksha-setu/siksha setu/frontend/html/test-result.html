@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Results | ShikshaSetu</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--bg-deep); padding: 40px 20px; }
+    .result-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: var(--shadow-brand);
+      text-align: center;
+    }
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(124,58,237,0.1);
+      border: 4px solid var(--brand-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: var(--text-primary);
+    }
+    .score-val { font-size: 32px; font-weight: 900; }
+    .score-label { font-size: 14px; color: var(--text-secondary); }
+    .result-list {
+      text-align: left;
+      margin: 30px 0;
+      max-height: 300px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+    .result-item {
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 1px solid;
+    }
+    .result-item.correct {
+      background: rgba(16,185,129,0.05);
+      border-color: rgba(16,185,129,0.3);
+    }
+    .result-item.incorrect {
+      background: rgba(239,68,68,0.05);
+      border-color: rgba(239,68,68,0.3);
+    }
+    .q-text { font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 15px; }
+    .a-text { font-size: 14px; color: var(--text-secondary); }
+    .a-correct { color: #34D399; font-weight: 600; }
+    .a-wrong { color: #F87171; font-weight: 600; }
+    
+    .btn-group { display: flex; gap: 12px; }
+    .btn-action {
+      flex: 1;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+    .btn-mistakes { background: var(--gradient-brand); color: white; }
+    .btn-retake { background: transparent; border: 1px solid var(--border-medium); color: var(--text-secondary); }
+    .btn-action:hover { transform: translateY(-2px); }
+    .btn-retake:hover { border-color: var(--text-primary); color: var(--text-primary); }
+  </style>
+</head>
+<body>
+  <div class="result-card fade-in">
+    <div class="score-circle">
+      <div class="score-val" id="score-val">0/0</div>
+      <div class="score-label">Score</div>
+    </div>
+    <h2 style="color: var(--text-primary); margin-bottom: 8px;">Test Completed!</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 24px;">Here is how you performed.</p>
+
+    <div class="result-list" id="result-list"></div>
+
+    <div class="btn-group">
+      <button class="btn-action btn-retake" onclick="window.location.href='/html/topic-selection.html'">Retake Test</button>
+      <button class="btn-action btn-mistakes" onclick="window.location.href='/html/mistake-dashboard.html'">View Mistake Analysis</button>
+    </div>
+  </div>
+
+  <script>
+    window.onload = () => {
+      const dataStr = localStorage.getItem('testResult');
+      if (!dataStr) {
+        window.location.href = '/html/topic-selection.html';
+        return;
+      }
+      
+      const data = JSON.parse(dataStr);
+      document.getElementById('score-val').textContent = `${data.score}/${data.total}`;
+      
+      const listContainer = document.getElementById('result-list');
+      data.results.forEach((r, i) => {
+        const item = document.createElement('div');
+        item.className = `result-item ${r.is_correct ? 'correct' : 'incorrect'}`;
+        
+        item.innerHTML = `
+          <div class="q-text">Q${i+1}: ${r.question}</div>
+          <div class="a-text">
+            Your Answer: <span class="${r.is_correct ? 'a-correct' : 'a-wrong'}">${r.user_answer || 'Skipped'}</span><br>
+            ${!r.is_correct ? `Correct Answer: <span class="a-correct">${r.correct_answer}</span>` : ''}
+          </div>
+        `;
+        listContainer.appendChild(item);
+      });
+    };
+  </script>
+</body>
+</html>

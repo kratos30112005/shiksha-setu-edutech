@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Mode | ShikshaSetu</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--bg-deep); }
+    .test-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: var(--shadow-brand);
+    }
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-medium);
+    }
+    .test-header h2 { color: var(--text-primary); font-size: 18px; }
+    .progress {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .question-block {
+      margin-bottom: 30px;
+      display: none;
+    }
+    .question-text {
+      color: var(--text-primary);
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-btn {
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-medium);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .option-btn:hover {
+      background: rgba(124,58,237,0.08);
+      border-color: var(--brand-primary);
+    }
+    .option-btn.selected {
+      background: var(--gradient-brand);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(124,58,237,0.3);
+    }
+    .btn-nav {
+      padding: 14px 24px;
+      background: var(--brand-primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      float: right;
+    }
+    .btn-nav:hover { background: #6D28D9; transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div class="test-container fade-in">
+    <div class="test-header">
+      <h2 id="test-title">Subject - Topic</h2>
+      <span class="progress" id="progress-text">Q. 1 / ?</span>
+    </div>
+
+    <div id="questions-container">
+      <!-- Questions inject here -->
+      <div style="text-align: center; color: var(--text-muted);" id="loading-msg">Loading questions...</div>
+    </div>
+
+    <div style="margin-top: 24px; overflow: auto;">
+      <button class="btn-nav" id="next-btn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+      <button class="btn-nav" id="submit-btn" onclick="submitTest()" style="display: none; background: var(--brand-success);">Submit Test</button>
+    </div>
+  </div>
+
+  <script>
+    let questions = [];
+    let currentIdx = 0;
+    let userAnswers = {};
+
+    window.onload = async () => {
+      const subject = localStorage.getItem('currentTestSubject');
+      const topic = localStorage.getItem('currentTestTopic');
+      
+      if (!subject || !topic) {
+        window.location.href = '/html/topic-selection.html';
+        return;
+      }
+
+      document.getElementById('test-title').textContent = `${subject} — ${topic}`;
+
+      try {
+        let endpoint = `/api/get-questions?subject=${subject}&topic=${topic}`;
+        if (subject === 'Custom PDF') {
+          endpoint = '/api/get-pdf-questions';
+        }
+        const res = await fetch(endpoint);
+        const data = await res.json();
+        
+        if (data.error) {
+          alert(data.error);
+          window.location.href = '/html/topic-selection.html';
+          return;
+        }
+
+        questions = data.questions;
+        renderQuestions();
+      } catch (e) {
+        alert("Failed to load questions.");
+      }
+    };
+
+    function renderQuestions() {
+      document.getElementById('loading-msg').style.display = 'none';
+      const container = document.getElementById('questions-container');
+      
+      questions.forEach((q, idx) => {
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        block.id = `qblock-${idx}`;
+        
+        let optsHtml = q.options.map(opt => `
+          <button class="option-btn" onclick="selectOption('${q.id}', '${opt}', this)">${opt}</button>
+        `).join('');
+
+        block.innerHTML = `
+          <div class="question-text">${idx + 1}. ${q.question}</div>
+          <div class="options-grid" id="optgrid-${q.id}">${optsHtml}</div>
+        `;
+        container.appendChild(block);
+      });
+
+      showQuestion(0);
+    }
+
+    function selectOption(qId, choice, btnElem) {
+      userAnswers[qId] = choice;
+      const grid = document.getElementById(`optgrid-${qId}`);
+      Array.from(grid.children).forEach(b => b.classList.remove('selected'));
+      btnElem.classList.add('selected');
+    }
+
+    function showQuestion(idx) {
+      const blocks = document.querySelectorAll('.question-block');
+      blocks.forEach(b => b.style.display = 'none');
+      if (blocks[idx]) {
+        blocks[idx].style.display = 'block';
+        document.getElementById('progress-text').textContent = `Q. ${idx + 1} / ${questions.length}`;
+      }
+
+      const nextBtn = document.getElementById('next-btn');
+      const submitBtn = document.getElementById('submit-btn');
+
+      if (idx === questions.length - 1) {
+        nextBtn.style.display = 'none';
+        submitBtn.style.display = 'block';
+      } else {
+        nextBtn.style.display = 'block';
+        submitBtn.style.display = 'none';
+      }
+    }
+
+    function nextQuestion() {
+      if (currentIdx < questions.length - 1) {
+        currentIdx++;
+        showQuestion(currentIdx);
+      }
+    }
+
+    async function submitTest() {
+      const subject = localStorage.getItem('currentTestSubject');
+      const topic = localStorage.getItem('currentTestTopic');
+
+      const payload = {
+        subject: subject,
+        topic: topic,
+        answers: userAnswers
+      };
+
+      try {
+        const res = await fetch('/api/submit-test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+
+        // Save result and jump to result page
+        localStorage.setItem('testResult', JSON.stringify(data));
+        window.location.href = '/html/test-result.html';
+      } catch (e) {
+        alert("Failed to submit test.");
+      }
+    }
+  </script>
+</body>
+</html>

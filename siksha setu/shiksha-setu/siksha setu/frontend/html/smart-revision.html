@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Revision | ShikshaSetu</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { display: flex; background: var(--bg-deep); min-height: 100vh; }
+    .page-container { margin-left: 260px; flex: 1; padding: 40px; }
+
+    .page-header { margin-bottom: 36px; }
+    .page-header h1 { font-size: 36px; font-weight: 900; letter-spacing:-1.5px; background: linear-gradient(135deg, #06B6D4, #A78BFA); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+    .page-header p { color: var(--text-secondary); font-size: 15px; }
+
+    /* AI Mentor Card */
+    .mentor-card {
+      background: linear-gradient(135deg, rgba(6,182,212,0.12), rgba(124,58,237,0.08));
+      border: 1px solid rgba(6,182,212,0.25);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 32px;
+    }
+
+    .mentor-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #06B6D4, #7C3AED);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      flex-shrink: 0;
+    }
+
+    .mentor-card h2 { font-size: 18px; font-weight: 800; color: var(--text-primary); margin-bottom: 6px; }
+    #ai-summary { color: var(--text-secondary); font-size: 15px; line-height: 1.7; }
+
+    /* Content Grid */
+    .revision-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .glass-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+    }
+
+    .glass-panel h3 { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Focus Steps */
+    .focus-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 16px;
+      background: rgba(255,255,255,0.02);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      border: 1px solid var(--border-subtle);
+      transition: var(--transition);
+    }
+
+    .focus-step:hover { border-color: rgba(6,182,212,0.3); background: rgba(6,182,212,0.04); }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #06B6D4, #7C3AED);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .step-priority {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .priority-high { background: rgba(239,68,68,0.15); color: #F87171; }
+    .priority-medium { background: rgba(245,158,11,0.15); color: #FCD34D; }
+
+    /* Weightage */
+    .weight-item { margin-bottom: 18px; }
+
+    .weight-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .weight-bar { height: 8px; background: var(--border-subtle); border-radius: 10px; overflow: hidden; }
+
+    .weight-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #06B6D4, #7C3AED);
+      transition: width 1s ease;
+    }
+
+    /* Bottom Action Bar */
+    .action-bar {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(calc(-50% + 130px));
+      display: flex;
+      gap: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      padding: 14px 24px;
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-lg);
+      z-index: 50;
+    }
+
+    /* Freq Badge */
+    .freq-card {
+      background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(6,182,212,0.06));
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .freq-icon { font-size: 32px; }
+    .freq-text h4 { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+    .freq-text p { color: var(--text-secondary); font-size: 13px; }
+
+    @media (max-width: 900px) {
+      .revision-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+
+<aside class="sidebar">
+  <a href="/" class="sidebar-brand">ShikshaSetu</a>
+  <nav class="sidebar-nav">
+    <a href="/html/dashboard.html" class="nav-link"><span class="nav-icon">🏠</span> Dashboard</a>
+    <a href="/html/ai-tutor.html" class="nav-link"><span class="nav-icon">🤖</span> AI Tutor</a>
+    <a href="/html/mocktest.html" class="nav-link"><span class="nav-icon">📝</span> Mock Tests</a>
+    <a href="/html/funquiz.html" class="nav-link"><span class="nav-icon">🎮</span> Fun Quiz</a>
+    <a href="/html/exam-preparation.html" class="nav-link"><span class="nav-icon">🎯</span> Exam Prep</a>
+    <a href="/html/smart-revision.html" class="nav-link active"><span class="nav-icon">🧠</span> Smart Revision</a>
+    <a href="/html/study-planner.html" class="nav-link"><span class="nav-icon">📅</span> Study Planner</a>
+    <a href="/html/leaderboard.html" class="nav-link"><span class="nav-icon">🏆</span> Leaderboard</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="nav-link" onclick="window.location.href='/'" style="color:#F87171;"><span class="nav-icon">🚪</span> Logout</button>
+  </div>
+</aside>
+
+<div class="page-container">
+
+  <div class="page-header anim-fade-up">
+    <h1>🧠 Smart Revision</h1>
+    <p>AI-powered revision priority optimized for your cognitive score</p>
+  </div>
+
+  <div class="mentor-card anim-fade-up-1">
+    <div class="mentor-avatar">🤖</div>
+    <div>
+      <h2>Saarthi AI — Revision Analysis</h2>
+      <p id="ai-summary">Loading revision plan from your uploaded syllabus...</p>
+    </div>
+  </div>
+
+  <div id="freq-section" style="display:none">
+    <div class="freq-card anim-fade-up-2">
+      <div class="freq-icon">⏰</div>
+      <div class="freq-text">
+        <h4 id="freq-heading">Revision Frequency</h4>
+        <p id="freq-tip">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="revision-grid anim-fade-up-3">
+    <div class="glass-panel">
+      <h3>📋 AI Focus Steps</h3>
+      <div id="focus-steps">
+        <div style="color:var(--text-muted); font-size:14px;">Upload your syllabus from Exam Prep first.</div>
+      </div>
+    </div>
+
+    <div class="glass-panel">
+      <h3>📊 Topic Weightage</h3>
+      <div id="weightage-container">
+        <div style="color:var(--text-muted); font-size:14px;">Awaiting analysis...</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:80px;"></div>
+</div>
+
+<div class="action-bar">
+  <a href="/html/dashboard.html" class="btn btn-ghost btn-sm">← Back</a>
+  <button class="btn btn-primary btn-sm" onclick="showToast('AI Flashcards coming in next phase! 🚀', 'info')">✨ AI Flashcards</button>
+</div>
+
+<div class="toast-container"></div>
+<script src="/js/script.js"></script>
+<script>
+fetch('/api/smart-revision')
+  .then(res => res.json())
+  .then(data => {
+
+    if (data.error) {
+      document.getElementById('ai-summary').textContent = '📂 ' + data.error;
+      return;
+    }
+
+    const topics = data.priority_topics || [];
+    const plan = data.revision_plan || [];
+    const freq = data.revision_frequency || 'Every 48 hours';
+    const tip = data.tip || '';
+
+    if (topics.length > 0) {
+      document.getElementById('ai-summary').innerHTML =
+        `Focus first on <strong style="color:#67E8F9;">${topics[0] || ''}</strong>, <strong style="color:#C4B5FD;">${topics[1] || ''}</strong>, and <strong style="color:#A78BFA;">${topics[2] || ''}</strong> for maximum exam impact.`;
+    } else {
+      document.getElementById('ai-summary').textContent = 'Upload your syllabus in Exam Prep to get AI-powered revision priorities.';
+    }
+
+    document.getElementById('freq-section').style.display = 'block';
+    document.getElementById('freq-heading').textContent = freq;
+    document.getElementById('freq-tip').textContent = tip;
+
+    // Focus Steps
+    const stepsEl = document.getElementById('focus-steps');
+    stepsEl.innerHTML = '';
+    plan.slice(0, 5).forEach((item, i) => {
+      stepsEl.innerHTML += `
+        <div class="focus-step">
+          <div class="step-num">${i + 1}</div>
+          <div style="flex:1;">
+            <div style="font-weight:700; color:var(--text-primary); margin-bottom:4px;">${item.topic}</div>
+            <span class="step-priority ${item.priority === 'High' ? 'priority-high' : 'priority-medium'}">${item.priority} Priority</span>
+          </div>
+        </div>
+      `;
+    });
+
+    // Weightage bars
+    const weightEl = document.getElementById('weightage-container');
+    weightEl.innerHTML = '';
+    plan.slice(0, 6).forEach((item, i) => {
+      const pct = item.weight || Math.max(30, 90 - i * 12);
+      weightEl.innerHTML += `
+        <div class="weight-item">
+          <div class="weight-label">
+            <span>${item.topic}</span>
+            <span style="color:#67E8F9;">${pct}%</span>
+          </div>
+          <div class="weight-bar">
+            <div class="weight-fill" style="width:${pct}%"></div>
+          </div>
+        </div>
+      `;
+    });
+
+  })
+  .catch(() => {
+    document.getElementById('ai-summary').textContent = '⚠️ Could not connect to backend. Make sure the server is running.';
+  });
+</script>
+</body>
+</html>

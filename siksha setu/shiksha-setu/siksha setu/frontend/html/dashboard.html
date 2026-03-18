@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | ShikshaSetu</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { display: flex; background: var(--bg-deep); min-height: 100vh; }
+
+    /* Welcome Banner */
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(236,72,153,0.12));
+      border: 1px solid rgba(124,58,237,0.25);
+      border-radius: var(--radius-xl);
+      padding: 36px 40px;
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: rgba(124,58,237,0.15);
+      border-radius: 50%;
+      filter: blur(40px);
+    }
+
+    .welcome-banner h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .welcome-banner p {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+
+    .level-badge {
+      background: var(--gradient-brand);
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-weight: 800;
+      font-size: 14px;
+      color: white;
+    }
+
+    /* Stats Grid */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      transition: var(--transition);
+    }
+
+    .stat-chip:hover {
+      border-color: rgba(124,58,237,0.4);
+      background: var(--bg-card-hover);
+    }
+
+    .chip-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .chip-val {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2px;
+    }
+
+    .chip-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Module Cards */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 32px 28px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .module-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .module-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-brand);
+    }
+
+    .module-card:hover::before { opacity: 1; }
+
+    .card-ai::before     { background: linear-gradient(135deg, rgba(124,58,237,0.08), transparent); }
+    .card-mock::before   { background: linear-gradient(135deg, rgba(236,72,153,0.08), transparent); }
+    .card-quiz::before   { background: linear-gradient(135deg, rgba(245,158,11,0.08), transparent); }
+    .card-exam::before   { background: linear-gradient(135deg, rgba(16,185,129,0.08), transparent); }
+    .card-revision::before  { background: linear-gradient(135deg, rgba(6,182,212,0.08), transparent); }
+    .card-leader::before { background: linear-gradient(135deg, rgba(139,92,246,0.08), transparent); }
+    .card-tests::before  { background: linear-gradient(135deg, rgba(248,113,113,0.08), transparent); }
+
+    .card-ai:hover     { border-color: rgba(124,58,237,0.5); }
+    .card-mock:hover   { border-color: rgba(236,72,153,0.5); }
+    .card-quiz:hover   { border-color: rgba(245,158,11,0.5); }
+    .card-exam:hover   { border-color: rgba(16,185,129,0.5); }
+    .card-revision:hover  { border-color: rgba(6,182,212,0.5); }
+    .card-leader:hover { border-color: rgba(139,92,246,0.5); }
+    .card-tests:hover  { border-color: rgba(248,113,113,0.5); }
+
+    .module-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .icon-ai      { background: rgba(124,58,237,0.15); }
+    .icon-mock    { background: rgba(236,72,153,0.15); }
+    .icon-quiz    { background: rgba(245,158,11,0.15); }
+    .icon-exam    { background: rgba(16,185,129,0.15); }
+    .icon-revision{ background: rgba(6,182,212,0.15); }
+    .icon-leader  { background: rgba(139,92,246,0.15); }
+    .icon-tests   { background: rgba(248,113,113,0.15); }
+
+    .module-card h3 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .module-card p {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .module-arrow {
+      position: absolute;
+      top: 28px;
+      right: 28px;
+      font-size: 18px;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+
+    .module-card:hover .module-arrow {
+      color: var(--text-primary);
+      transform: translate(4px, -4px);
+    }
+
+    /* Section divider */
+    .section-divider {
+      margin: 36px 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-divider h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .welcome-banner { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <a href="/" class="sidebar-brand">ShikshaSetu</a>
+
+  <nav class="sidebar-nav">
+    <a href="/html/dashboard.html" class="nav-link active">
+      <span class="nav-icon">🏠</span> Dashboard
+    </a>
+    <a href="/html/ai-tutor.html" class="nav-link">
+      <span class="nav-icon">🤖</span> AI Tutor
+    </a>
+    <a href="/html/mocktest.html" class="nav-link">
+      <span class="nav-icon">📝</span> Mock Tests
+    </a>
+    <a href="/html/topic-selection.html" class="nav-link">
+      <span class="nav-icon">🎯</span> Topic Tests
+    </a>
+    <a href="/html/funquiz.html" class="nav-link">
+      <span class="nav-icon">🎮</span> Fun Quiz
+    </a>
+    <a href="/html/exam-preparation.html" class="nav-link">
+      <span class="nav-icon">📊</span> Exam Prep
+    </a>
+    <a href="/html/smart-revision.html" class="nav-link">
+      <span class="nav-icon">🧠</span> Smart Revision
+    </a>
+    <a href="/html/study-planner.html" class="nav-link">
+      <span class="nav-icon">📅</span> Study Planner
+    </a>
+    <a href="/html/leaderboard.html" class="nav-link">
+      <span class="nav-icon">🏆</span> Leaderboard
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div style="font-size: 13px; color: var(--text-muted); padding: 0 4px 12px; font-weight: 600;">
+      Signed in as <span id="user-name" style="color: var(--text-secondary);">Student</span>
+    </div>
+    <button class="nav-link" onclick="logout()" style="color: #F87171;">
+      <span class="nav-icon">🚪</span> Logout
+    </button>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+
+  <div class="welcome-banner anim-fade-up">
+    <div>
+      <h1 id="welcome-msg">Namaste! 👋</h1>
+      <p>Ready to ace your exams? Here's your learning hub.</p>
+    </div>
+    <div class="level-badge" id="level-badge">Level: Medium</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row anim-fade-up-1">
+    <div class="stat-chip">
+      <div class="chip-icon">🧠</div>
+      <div class="chip-val" id="cognitive-score">50</div>
+      <div class="chip-label">Cognitive Score</div>
+    </div>
+    <div class="stat-chip">
+      <div class="chip-icon">🎯</div>
+      <div class="chip-val" id="avg-accuracy">0%</div>
+      <div class="chip-label">Avg. Accuracy</div>
+    </div>
+    <div class="stat-chip">
+      <div class="chip-icon">📝</div>
+      <div class="chip-val" id="total-attempts">0</div>
+      <div class="chip-label">Tests Taken</div>
+    </div>
+    <div class="stat-chip">
+      <div class="chip-icon">🔥</div>
+      <div class="chip-val" id="difficulty-level">Medium</div>
+      <div class="chip-label">Difficulty Level</div>
+    </div>
+  </div>
+
+  <!-- Modules -->
+  <div class="section-divider anim-fade-up-2">
+    <h2>Your Modules</h2>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="modules-grid anim-fade-up-2">
+    <a href="/html/ai-tutor.html" class="module-card card-ai">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon-wrap icon-ai">🤖</div>
+      <h3>Saarthi AI Tutor</h3>
+      <p>Upload your PDF and chat with AI. Get smart, adaptive explanations of any topic.</p>
+    </a>
+
+    <a href="/html/mocktest.html" class="module-card card-mock">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon-wrap icon-mock">📝</div>
+      <h3>Mock Tests</h3>
+      <p>Take solo or group mock exams. AI analyzes your performance and updates your profile.</p>
+    </a>
+
+    <a href="/html/topic-selection.html" class="module-card card-tests">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon-wrap icon-tests">🎯</div>
+      <h3>Topic-Based Tests</h3>
+      <p>Test your knowledge on specific subjects and track your weak points with our Mistake Counter.</p>
+    </a>
+
+    <a href="/html/funquiz.html" class="module-card card-quiz">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon-wrap icon-quiz">🎮</div>
+      <h3>Fun Quiz</h3>
+      <p>Quick 5-question quizzes to keep your brain sharp. Fun, fast, and competitive!</p>
+    </a>
+
+    <a href="/html/exam-preparation.html" class="module-card card-exam">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon-wrap icon-exam">🎯</div>
+      <h3>Exam Preparation</h3>
+      <p>Upload your syllabus and access personalized AI study plans and smart revision tools.</p>
+    </a>
+
+    <a href="/html/smart-revision.html" class="module-card card-revision">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon-wrap icon-revision">🧠</div>
+      <h3>Smart Revision</h3>
+      <p>AI-prioritized revision topics based on your weak areas and cognitive score.</p>
+    </a>
+
+    <a href="/html/leaderboard.html" class="module-card card-leader">
+      <span class="module-arrow">↗</span>
+      <div class="module-icon-wrap icon-leader">🏆</div>
+      <h3>Leaderboard</h3>
+      <p>See how you rank globally. Compete with solo learners and study squads.</p>
+    </a>
+  </div>
+
+</main>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="/js/script.js"></script>
+<script>
+async function loadDashboardData() {
+  try {
+    const res = await fetch('/api/user');
+    const data = await res.json();
+
+    document.getElementById('user-name').textContent = data.user || 'Student';
+    document.getElementById('welcome-msg').textContent = `Namaste, ${data.user || 'Student'}! 👋`;
+    document.getElementById('cognitive-score').textContent = data.cognitive_score || 50;
+    document.getElementById('avg-accuracy').textContent = (data.average_accuracy || 0).toFixed(1) + '%';
+    document.getElementById('total-attempts').textContent = data.total_attempts || 0;
+    document.getElementById('difficulty-level').textContent = (data.difficulty_level || 'medium').charAt(0).toUpperCase() + (data.difficulty_level || 'medium').slice(1);
+    document.getElementById('level-badge').textContent = `Level: ${(data.difficulty_level || 'medium').charAt(0).toUpperCase() + (data.difficulty_level || 'medium').slice(1)}`;
+  } catch (e) {
+    const name = localStorage.getItem('userName') || 'Student';
+    document.getElementById('user-name').textContent = name;
+    document.getElementById('welcome-msg').textContent = `Namaste, ${name}! 👋`;
+  }
+}
+
+function logout() {
+  fetch('/api/logout', { method: 'POST' }).finally(() => {
+    localStorage.removeItem('userName');
+    window.location.href = '/';
+  });
+}
+
+loadDashboardData();
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mistake Dashboard | ShikshaSetu</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; min-height: 100vh; background: var(--bg-deep); }
+    .dashboard-container {
+      width: 100%;
+      max-width: 800px;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .header-bar h1 { color: var(--text-primary); font-size: 28px; }
+    .btn-back {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-medium);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+    
+    .weak-topic-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .topic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .topic-title { font-size: 20px; font-weight: 800; color: var(--text-primary); }
+    .badge-mistake {
+      background: rgba(239,68,68,0.1);
+      color: #F87171;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    
+    .roadmap {
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .roadmap h4 { color: var(--text-primary); margin-bottom: 12px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+    .roadmap-steps {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .step-chip {
+      background: rgba(124,58,237,0.15);
+      border: 1px solid rgba(124,58,237,0.3);
+      color: #A78BFA;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    
+    .empty-state { text-align: center; color: var(--text-muted); padding: 40px; }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container fade-in">
+    <div class="header-bar">
+      <div>
+        <h1>Mistake Analysis</h1>
+        <p style="color: var(--text-secondary); margin-top: 4px;">Review your weak topics to improve effectively.</p>
+      </div>
+      <button class="btn-back" onclick="window.location.href='/html/topic-selection.html'">Take Another Test</button>
+    </div>
+
+    <div id="topics-list">
+      <div class="empty-state" id="loading-msg">Loading your mistake data...</div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = async () => {
+      try {
+        const res = await fetch('/api/get-mistakes');
+        const data = await res.json();
+        
+        const container = document.getElementById('topics-list');
+        container.innerHTML = '';
+        
+        if (!data.weak_topics || data.weak_topics.length === 0) {
+          container.innerHTML = '<div class="empty-state">🎉 Great job! No mistakes found. Keep it up!</div>';
+          return;
+        }
+
+        data.weak_topics.forEach(topic => {
+          const card = document.createElement('div');
+          card.className = 'weak-topic-card';
+          
+          let stepsHtml = topic.roadmap.map(step => `<div class="step-chip">${step}</div>`).join('');
+
+          card.innerHTML = `
+            <div class="topic-header">
+              <div class="topic-title">${topic.subject} — ${topic.topic}</div>
+              <div class="badge-mistake">${topic.mistake_count} Mistakes</div>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 14px;">Focus on this area to boost your overall score.</p>
+            
+            <div class="roadmap">
+              <h4>Improvement Roadmap</h4>
+              <div class="roadmap-steps">
+                ${stepsHtml}
+              </div>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (e) {
+        document.getElementById('topics-list').innerHTML = '<div class="empty-state">Failed to load data.</div>';
+      }
+    };
+  </script>
+</body>
+</html>

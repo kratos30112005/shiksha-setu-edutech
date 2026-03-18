@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Battle | ShikshaSetu</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:#F8FAFC;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin:0;
+}
+
+header{
+  margin-top:60px;
+  text-align:center;
+}
+
+header h1{
+  font-size:42px;
+  font-weight:800;
+  background:linear-gradient(135deg,#4F46E5,#EC4899);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.card{
+  background:white;
+  padding:40px;
+  border-radius:30px;
+  width:90%;
+  max-width:600px;
+  margin-top:40px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+}
+
+button{
+  margin-top:20px;
+  padding:15px 25px;
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.primary{
+  background:#6366F1;
+  color:white;
+}
+
+.success{
+  background:#10B981;
+  color:white;
+  width:100%;
+}
+
+.option-btn{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #E2E8F0;
+  cursor:pointer;
+  background:#F1F5F9;
+}
+
+.hidden{
+  display:none;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Social Battle Arena</h1>
+<p>Challenge your friends in intelligent adaptive battle</p>
+</header>
+
+<div class="card" id="inviteBox">
+  <h2>Invite a Friend</h2>
+  <button class="primary" onclick="startLobby()">Send Battle Request</button>
+</div>
+
+<div class="card hidden" id="lobbyBox">
+  <h2>Waiting for Opponent...</h2>
+  <button class="success" onclick="startBattle()">Start Multiplayer Test</button>
+</div>
+
+<div class="card hidden" id="battleBox"></div>
+
+<script>
+
+function startLobby(){
+  document.getElementById("inviteBox").classList.add("hidden");
+  document.getElementById("lobbyBox").classList.remove("hidden");
+}
+
+async function startBattle(){
+
+  document.getElementById("lobbyBox").classList.add("hidden");
+
+  const container = document.getElementById("battleBox");
+  container.classList.remove("hidden");
+  container.innerHTML = "<h2>Loading Battle Questions...</h2>";
+
+  try {
+
+    const response = await fetch("/api/solo-mock");
+    const data = await response.json();
+
+    if(data.error){
+      container.innerHTML = "<h2>Please upload syllabus first.</h2>";
+      return;
+    }
+
+    let questions = data.questions;
+
+    if(!questions || questions.length === 0){
+      container.innerHTML = "<h2>No questions generated.</h2>";
+      return;
+    }
+
+    let current = 0;
+    let score = 0;
+    let startTime = Date.now();
+
+    function loadQuestion(){
+
+      if(current >= questions.length){
+        finishBattle(score, questions.length, startTime);
+        return;
+      }
+
+      let q = questions[current];
+
+      container.innerHTML = `
+      <h3>Battle Question ${current+1}</h3>
+      <p style="font-weight:600">${q.question}</p>
+      <div id="options"></div>
+      `;
+
+      let optionsDiv = document.getElementById("options");
+
+      q.options.forEach(opt=>{
+        let btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.className="option-btn";
+        btn.onclick = ()=>{
+
+          if(opt === q.answer){
+            score++;
+          }
+
+          current++;
+          loadQuestion();
+        };
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    async function finishBattle(score, total, startTime){
+
+      let endTime = Date.now();
+      let totalTimeSeconds = (endTime - startTime) / 1000;
+      let avgTime = totalTimeSeconds / total;
+
+      container.innerHTML = `
+      <h2>🔥 Battle Finished!</h2>
+      <p>Your Score: ${score}/${total}</p>
+      <p>Analyzing performance...</p>
+      `;
+
+      try{
+
+        const performanceResponse = await fetch("/api/analyze-performance",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            score: score,
+            total_questions: total,
+            avg_time: avgTime,
+            topic: "general",
+            difficulty: "medium"
+          })
+        });
+
+        const performanceData = await performanceResponse.json();
+
+        container.innerHTML = `
+        <h2>🔥 Battle Completed!</h2>
+        <p>Your Score: ${score}/${total}</p>
+        <hr>
+        <h3>🧠 Cognitive Score: ${performanceData.cognitive_score ?? "N/A"}</h3>
+        <p>Difficulty Level: ${performanceData.difficulty_level ?? "N/A"}</p>
+        <button class="primary" onclick="location.reload()">Return</button>
+        `;
+
+      } catch(error){
+        container.innerHTML += "<p>⚠️ Performance analysis failed.</p>";
+      }
+
+    }
+
+    loadQuestion();
+
+  } catch(error){
+    container.innerHTML = "<h2>⚠️ Failed to load battle questions.</h2>";
+    console.error(error);
+  }
+
+}
+
+</script>
+
+</body>
+</html>

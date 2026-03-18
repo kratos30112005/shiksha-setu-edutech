@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun Quiz | ShikshaSetu</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { display: flex; background: var(--bg-deep); min-height: 100vh; }
+
+    .page-container {
+      margin-left: 260px;
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .page-header { text-align: center; margin-bottom: 40px; }
+    .page-header h1 {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      background: linear-gradient(135deg, #F59E0B, #EC4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .page-header p { color: var(--text-secondary); font-size: 15px; }
+
+    /* Progress */
+    .quiz-progress {
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+
+    .prog-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .prog-bar { height: 6px; background: var(--border-subtle); border-radius: 10px; overflow: hidden; }
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #F59E0B, #EC4899);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    /* Quiz Card */
+    .quiz-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 680px;
+      animation: scaleIn 0.4s var(--ease-smooth);
+    }
+
+    .question-emoji {
+      font-size: 44px;
+      margin-bottom: 16px;
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    #question {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 32px;
+      letter-spacing: -0.3px;
+    }
+
+    .options-grid { display: grid; gap: 14px; }
+
+    .quiz-opt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .quiz-opt:hover:not(:disabled) {
+      background: rgba(245,158,11,0.08);
+      border-color: rgba(245,158,11,0.4);
+      transform: translateX(6px);
+    }
+
+    .quiz-opt.correct {
+      background: rgba(16,185,129,0.12);
+      border-color: rgba(16,185,129,0.5);
+      color: #34D399;
+    }
+
+    .quiz-opt.wrong {
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.4);
+      color: #F87171;
+      animation: shake 0.4s ease;
+    }
+
+    .opt-feedback { font-size: 18px; }
+
+    /* Score Screen */
+    .score-screen {
+      display: none;
+      text-align: center;
+      animation: scaleIn 0.6s var(--ease-smooth);
+    }
+
+    .score-ring {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #F59E0B, #EC4899);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      box-shadow: 0 16px 48px rgba(245,158,11,0.3);
+      position: relative;
+    }
+
+    .score-num { font-size: 46px; font-weight: 900; color: white; line-height: 1; }
+    .score-total { font-size: 14px; color: rgba(255,255,255,0.8); font-weight: 600; }
+
+    .score-feedback {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .score-sub { color: var(--text-secondary); font-size: 15px; margin-bottom: 28px; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <a href="/" class="sidebar-brand">ShikshaSetu</a>
+  <nav class="sidebar-nav">
+    <a href="/html/dashboard.html" class="nav-link"><span class="nav-icon">🏠</span> Dashboard</a>
+    <a href="/html/ai-tutor.html" class="nav-link"><span class="nav-icon">🤖</span> AI Tutor</a>
+    <a href="/html/mocktest.html" class="nav-link"><span class="nav-icon">📝</span> Mock Tests</a>
+    <a href="/html/funquiz.html" class="nav-link active"><span class="nav-icon">🎮</span> Fun Quiz</a>
+    <a href="/html/exam-preparation.html" class="nav-link"><span class="nav-icon">🎯</span> Exam Prep</a>
+    <a href="/html/smart-revision.html" class="nav-link"><span class="nav-icon">🧠</span> Smart Revision</a>
+    <a href="/html/study-planner.html" class="nav-link"><span class="nav-icon">📅</span> Study Planner</a>
+    <a href="/html/leaderboard.html" class="nav-link"><span class="nav-icon">🏆</span> Leaderboard</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="nav-link" onclick="window.location.href='/'" style="color:#F87171;"><span class="nav-icon">🚪</span> Logout</button>
+  </div>
+</aside>
+
+<div class="page-container">
+
+  <div class="page-header anim-fade-up">
+    <h1>⚡ Fun Quiz</h1>
+    <p>5 rapid-fire questions to sharpen your brain</p>
+  </div>
+
+  <div class="quiz-progress anim-fade-up-1">
+    <div class="prog-meta">
+      <span id="question-number">Question 1 of 5</span>
+      <span id="score-tracking">Score: 0 🔥</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="progress-bar" style="width:0%"></div></div>
+  </div>
+
+  <div class="quiz-card">
+    <div id="quiz-box">
+      <span class="question-emoji" id="q-emoji">🤔</span>
+      <div id="question">Loading your challenge...</div>
+      <div class="options-grid" id="options"></div>
+    </div>
+
+    <div class="score-screen" id="score-container">
+      <div class="score-ring">
+        <div class="score-num" id="final-score">0</div>
+        <div class="score-total">out of 5</div>
+      </div>
+      <div class="score-feedback" id="feedback-text">Well done!</div>
+      <div class="score-sub" id="feedback-sub">Keep practicing to boost your score!</div>
+      <button class="btn btn-primary" onclick="restartQuiz()" style="margin: 0 auto;">
+        🔄 Play Again
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast-container"></div>
+
+<script src="/js/script.js"></script>
+<script>
+
+let currentQ = 0;
+let score = 0;
+const TOTAL = 5;
+let canClick = true;
+
+const emojis = ['🤔', '💡', '🎯', '⚡', '🚀', '🧩', '🌟', '🔥'];
+
+async function loadQuestion() {
+  if (currentQ >= TOTAL) { showResults(); return; }
+
+  canClick = true;
+  document.getElementById('options').innerHTML = '';
+  document.getElementById('question').textContent = 'Loading...';
+  document.getElementById('q-emoji').textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+  const progress = (currentQ / TOTAL) * 100;
+  document.getElementById('progress-bar').style.width = `${progress}%`;
+  document.getElementById('question-number').textContent = `Question ${currentQ + 1} of ${TOTAL}`;
+  document.getElementById('score-tracking').textContent = `Score: ${score} 🔥`;
+
+  try {
+    const res = await fetch('/api/fun-quiz');
+    const data = await res.json();
+
+    document.getElementById('question').textContent = data.question;
+
+    const optionsDiv = document.getElementById('options');
+    data.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-opt';
+      btn.innerHTML = `<span>${opt}</span><span class="opt-feedback"></span>`;
+      btn.onclick = () => selectAnswer(btn, opt, data.answer);
+      optionsDiv.appendChild(btn);
+    });
+
+  } catch (err) {
+    document.getElementById('question').textContent = '⚠️ Failed to load. Is the server running?';
+  }
+}
+
+function selectAnswer(btn, selected, correct) {
+  if (!canClick) return;
+  canClick = false;
+
+  document.querySelectorAll('.quiz-opt').forEach(b => b.onclick = null);
+
+  const feedback = btn.querySelector('.opt-feedback');
+
+  if (selected === correct) {
+    score++;
+    btn.classList.add('correct');
+    feedback.textContent = '✅';
+  } else {
+    btn.classList.add('wrong');
+    feedback.textContent = '❌';
+    document.querySelectorAll('.quiz-opt').forEach(b => {
+      if (b.querySelector('span').textContent === correct) {
+        b.classList.add('correct');
+        b.querySelector('.opt-feedback').textContent = '✅';
+      }
+    });
+  }
+
+  setTimeout(() => { currentQ++; loadQuestion(); }, 1300);
+}
+
+function showResults() {
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('quiz-box').style.display = 'none';
+  document.getElementById('score-container').style.display = 'block';
+  document.getElementById('final-score').textContent = score;
+
+  let feedback, sub;
+  if (score === TOTAL) { feedback = '🔥 Perfect Score!'; sub = 'You are absolutely brilliant! Keep up the great work.'; }
+  else if (score >= 3) { feedback = '👍 Great Job!'; sub = 'You\'re on the right track. A few more sessions and you\'ll be unstoppable!'; }
+  else { feedback = '📚 Keep Practicing!'; sub = 'Every attempt makes you better. Review the topics and try again!'; }
+
+  document.getElementById('feedback-text').textContent = feedback;
+  document.getElementById('feedback-sub').textContent = sub;
+}
+
+function restartQuiz() {
+  currentQ = 0;
+  score = 0;
+  canClick = true;
+  document.getElementById('quiz-box').style.display = 'block';
+  document.getElementById('score-container').style.display = 'none';
+  loadQuestion();
+}
+
+setTimeout(loadQuestion, 400);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+Project Inventory (auto-generated)
+Generated: 2026-03-18
+Workspace: C:\Users\harsh\OneDrive\Desktop\siksha setu
+
+Git
+- Branch: main
+- HEAD: b1af23acb064c067a0a3bde699db0984c390d886
+
+Notes
+- This file lists the current files/folders present in the workspace at generation time.
+- It includes untracked items and internal .git metadata.
+
+=====================
+Directories (recursive)
+=====================
+.git
+backend
+frontend
+SHIKSHA SETU
+.git\cursor
+.git\hooks
+.git\info
+.git\logs
+.git\objects
+.git\refs
+.git\cursor\crepe
+.git\cursor\crepe\b1af23acb064c067a0a3bde699db0984c390d886
+.git\logs\refs
+.git\logs\refs\heads
+.git\logs\refs\remotes
+.git\logs\refs\remotes\origin
+.git\objects\03
+.git\objects\10
+.git\objects\23
+.git\objects\40
+.git\objects\51
+.git\objects\55
+.git\objects\56
+.git\objects\5c
+.git\objects\5d
+.git\objects\6a
+.git\objects\a0
+.git\objects\b1
+.git\objects\ba
+.git\objects\bd
+.git\objects\cf
+.git\objects\d9
+.git\objects\e7
+.git\objects\f4
+.git\objects\info
+.git\objects\pack
+.git\refs\heads
+.git\refs\remotes
+.git\refs\tags
+.git\refs\remotes\origin
+backend\ml
+backend\uploads
+backend\__pycache__
+backend\ml\__pycache__
+frontend\css
+frontend\html
+frontend\js
+SHIKSHA SETU\.git
+SHIKSHA SETU\.git\hooks
+SHIKSHA SETU\.git\info
+SHIKSHA SETU\.git\logs
+SHIKSHA SETU\.git\objects
+SHIKSHA SETU\.git\refs
+SHIKSHA SETU\.git\logs\refs
+SHIKSHA SETU\.git\logs\refs\heads
+SHIKSHA SETU\.git\objects\6c
+SHIKSHA SETU\.git\objects\6f
+SHIKSHA SETU\.git\objects\df
+SHIKSHA SETU\.git\objects\info
+SHIKSHA SETU\.git\objects\pack
+SHIKSHA SETU\.git\refs\heads
+SHIKSHA SETU\.git\refs\tags
+
+================
+Files (recursive)
+================
+PROJECT_SUMMARY.txt
+.git\COMMIT_EDITMSG
+.git\config
+.git\description
+.git\FETCH_HEAD
+.git\HEAD
+.git\index
+.git\cursor\crepe\b1af23acb064c067a0a3bde699db0984c390d886\index.bin
+.git\cursor\crepe\b1af23acb064c067a0a3bde699db0984c390d886\metadata.json
+.git\cursor\crepe\b1af23acb064c067a0a3bde699db0984c390d886\postings.bin
+.git\hooks\applypatch-msg.sample
+.git\hooks\commit-msg.sample
+.git\hooks\fsmonitor-watchman.sample
+.git\hooks\post-update.sample
+.git\hooks\pre-applypatch.sample
+.git\hooks\pre-commit.sample
+.git\hooks\pre-merge-commit.sample
+.git\hooks\pre-push.sample
+.git\hooks\pre-rebase.sample
+.git\hooks\pre-receive.sample
+.git\hooks\prepare-commit-msg.sample
+.git\hooks\push-to-checkout.sample
+.git\hooks\sendemail-validate.sample
+.git\hooks\update.sample
+.git\info\exclude
+.git\logs\HEAD
+.git\logs\refs\heads\main
+.git\logs\refs\remotes\origin\main
+.git\objects\03\5e3367956982ce3cbc9b40c7f211624b217b59
+.git\objects\10\f46b6fd5de5334a6f1aba898a49b83a61b2c27
+.git\objects\23\6730c6ccbcdcd92af5e1c3905fce536b634332
+.git\objects\40\87e7567471cedfb89a13da54f4b50cdc1cc2ea
+.git\objects\51\5616169711e625adc740db7ff24f683ded15e5
+.git\objects\55\540520b39a192095df48092a862b96392b32e6
+.git\objects\56\7485eae93f945e18eb8b829f0b5aaf8b55b7e8
+.git\objects\5c\f792b22035b2a2672cdc61f58f5e213ed6efd6
+.git\objects\5d\158129736a07eb85fc6780276713df7d1c529d
+.git\objects\6a\644831bd97c2ec8c9377241ed434ebb170362d
+.git\objects\a0\25f2198bb10ecebca74b1e1de1de5bf7585efa
+.git\objects\b1\af23acb064c067a0a3bde699db0984c390d886
+.git\objects\ba\739552e7401e80421cd73e149d826ca380f931
+.git\objects\bd\35cdc4f9b8d55cd1c56a1c4643d0e91db0aa49
+.git\objects\cf\9835de1817abe0b57d78f083b2a71b2cc7ae77
+.git\objects\d9\744216d8a5ab1008920a5c600b1557850e7b80
+.git\objects\e7\00ae9dfd88c1f87e54899ef48f6c4f1065bbc3
+.git\objects\f4\bf1e5e0c4e5876fa53f341dfdd283a71d30a35
+.git\refs\heads\main
+.git\refs\remotes\origin\main
+backend\app.py
+backend\database.py
+backend\generate_pdf.py
+backend\logic.py
+backend\questions_bank.json
+backend\requirements.txt
+backend\shikshasetu.db
+backend\ShikshaSetu_Project_Vision_and_Architecture.pdf
+backend\ml\profile_engine.py
+backend\ml\__pycache__\profile_engine.cpython-313.pyc
+backend\uploads\admit card.pdf
+backend\uploads\ayush pdf.pdf
+backend\uploads\CERTIFICATES PDF.pdf
+backend\uploads\finnnnnnal ai report.pdf
+backend\uploads\FTIP_Complete_Journey_March2026.pdf
+backend\uploads\INTERNSHIP FINNNNNNAL REPORT.pdf
+backend\uploads\Madhav ai practical file.pdf
+backend\uploads\MS-Dhoni-Biography.docx.pdf
+backend\__pycache__\database.cpython-313.pyc
+backend\__pycache__\logic.cpython-313.pyc
+frontend\css\style.css
+frontend\html\ai-tutor.html
+frontend\html\dashboard.html
+frontend\html\exam-preparation.html
+frontend\html\funquiz.html
+frontend\html\index.html
+frontend\html\leaderboard.html
+frontend\html\mistake-dashboard.html
+frontend\html\mocktest.html
+frontend\html\smart-revision.html
+frontend\html\social-battle.html
+frontend\html\solo-test.html
+frontend\html\study-planner.html
+frontend\html\test-page.html
+frontend\html\test-result.html
+frontend\html\topic-selection.html
+frontend\js\script.js
+SHIKSHA SETU\.gitattributes
+SHIKSHA SETU\.git\COMMIT_EDITMSG
+SHIKSHA SETU\.git\config
+SHIKSHA SETU\.git\description
+SHIKSHA SETU\.git\HEAD
+SHIKSHA SETU\.git\index
+SHIKSHA SETU\.git\hooks\applypatch-msg.sample
+SHIKSHA SETU\.git\hooks\commit-msg.sample
+SHIKSHA SETU\.git\hooks\fsmonitor-watchman.sample
+SHIKSHA SETU\.git\hooks\post-update.sample
+SHIKSHA SETU\.git\hooks\pre-applypatch.sample
+SHIKSHA SETU\.git\hooks\pre-commit.sample
+SHIKSHA SETU\.git\hooks\pre-merge-commit.sample
+SHIKSHA SETU\.git\hooks\pre-push.sample
+SHIKSHA SETU\.git\hooks\pre-rebase.sample
+SHIKSHA SETU\.git\hooks\pre-receive.sample
+SHIKSHA SETU\.git\hooks\prepare-commit-msg.sample
+SHIKSHA SETU\.git\hooks\push-to-checkout.sample
+SHIKSHA SETU\.git\hooks\sendemail-validate.sample
+SHIKSHA SETU\.git\hooks\update.sample
+SHIKSHA SETU\.git\info\exclude
+SHIKSHA SETU\.git\logs\HEAD
+SHIKSHA SETU\.git\logs\refs\heads\main
+SHIKSHA SETU\.git\objects\6c\f6dfc315fc9ff4676caf81d5ca72b40158161e
+SHIKSHA SETU\.git\objects\6f\9509c88bed7080d496fc5e1d87a9315e30549d
+SHIKSHA SETU\.git\objects\df\e0770424b2a19faf507a501ebfc23be8f54e7b
+SHIKSHA SETU\.git\refs\heads\main
+
